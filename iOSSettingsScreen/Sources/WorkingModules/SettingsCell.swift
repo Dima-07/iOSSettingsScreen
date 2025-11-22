@@ -8,12 +8,18 @@
 import UIKit
 
 class SettingsCell: UITableViewCell {
+    
+    private var iconWidthConstraint: NSLayoutConstraint!
+    private var iconHeightConstraint: NSLayoutConstraint!
+    private var imageWidthLimitation: NSLayoutConstraint!
+    private var imageHeightConstraint: NSLayoutConstraint!
 
     // MARK: - Outlets
     
     private let iconBackgroundView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 8
+        view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -32,7 +38,7 @@ class SettingsCell: UITableViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17)
         label.numberOfLines = 0
-        label.setContentCompressionResistancePriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -43,7 +49,6 @@ class SettingsCell: UITableViewCell {
         label.font = .systemFont(ofSize: 15)
         label.textColor = .secondaryLabel
         label.textAlignment = .right
-        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -72,26 +77,52 @@ class SettingsCell: UITableViewCell {
     }
 
     private func setupLayout() {
+        
+        iconWidthConstraint = iconBackgroundView.widthAnchor.constraint(equalToConstant: 30)
+        iconHeightConstraint = iconBackgroundView.heightAnchor.constraint(equalToConstant: 30)
+        imageWidthLimitation = iconImageView.widthAnchor.constraint(equalToConstant: 20)
+        imageHeightConstraint = iconImageView.heightAnchor.constraint(equalToConstant: 20)
+        
         NSLayoutConstraint.activate([
             iconBackgroundView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             iconBackgroundView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            iconBackgroundView.widthAnchor.constraint(equalToConstant: 30),
-            iconBackgroundView.heightAnchor.constraint(equalToConstant: 30),
+            iconWidthConstraint,
+            iconHeightConstraint,
             
             iconImageView.centerYAnchor.constraint(equalTo: iconBackgroundView.centerYAnchor),
             iconImageView.centerXAnchor.constraint(equalTo: iconBackgroundView.centerXAnchor),
-            iconImageView.widthAnchor.constraint(equalToConstant: 20),
-            iconImageView.heightAnchor.constraint(equalToConstant: 20),
+            imageWidthLimitation,
+            imageHeightConstraint,
             
             titleLabel.leadingAnchor.constraint(equalTo: iconBackgroundView.trailingAnchor, constant: 12),
-            titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
             
-            detailLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -3),
+            detailLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 8),
+            detailLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
             detailLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
     }
 
     // MARK: - Reuse
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        iconWidthConstraint.constant = 30
+        iconHeightConstraint.constant = 30
+        imageWidthLimitation.constant = 20
+        imageHeightConstraint.constant = 20
+        iconBackgroundView.layer.cornerRadius = 8
+        iconImageView.contentMode = .scaleAspectFit
+        
+        titleLabel.font = .systemFont(ofSize: 17)
+        detailLabel.isHidden = true
+        
+        accessoryType = .none
+        accessoryView = nil
+    }
+    
     func configure( with item: SettingsModel) {
         iconBackgroundView.backgroundColor = item.backgroundColor
         iconImageView.image = item.icon
@@ -100,11 +131,15 @@ class SettingsCell: UITableViewCell {
         detailLabel.isHidden = item.detailText == nil
         
         if item.firstCell {
+            iconWidthConstraint.constant = 60
+            iconHeightConstraint.constant = 60
+            imageWidthLimitation.constant = 60
+            imageHeightConstraint.constant = 60
             iconBackgroundView.layer.cornerRadius = 30
             iconImageView.contentMode = .scaleAspectFill
-        } else {
-            iconBackgroundView.layer.cornerRadius = 8
-            iconImageView.contentMode = .scaleAspectFit
+            titleLabel.font = .systemFont(ofSize: 18, weight: .bold)
         }
+        
+        layoutIfNeeded()
     }
 }
