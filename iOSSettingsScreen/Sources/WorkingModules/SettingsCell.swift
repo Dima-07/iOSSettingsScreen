@@ -139,7 +139,5 @@ class SettingsCell: UITableViewCell {
             iconImageView.contentMode = .scaleAspectFill
             titleLabel.font = .systemFont(ofSize: 18, weight: .bold)
         }
-        
-        layoutIfNeeded()
     }
 }
