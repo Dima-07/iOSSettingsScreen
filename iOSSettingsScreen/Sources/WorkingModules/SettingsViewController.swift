@@ -96,4 +96,11 @@ extension SettingsViewController: UITableViewDelegate {
             return 44
         }
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let viewController = SettingsDetailViewController()
+        tableView.deselectRow(at: indexPath, animated: true)
+        viewController.settingsModel = settingsModel?[indexPath.section][indexPath.row]
+        navigationController?.pushViewController(viewController, animated: true)
+    }
 }

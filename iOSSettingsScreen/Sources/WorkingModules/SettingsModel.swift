@@ -19,15 +19,15 @@ struct SettingsModel: Hashable {
     
     var icon: UIImage {
         if customIcon {
-            return UIImage(named: iconName) ?? UIImage(systemName: "person.circle.fill")!
+            return UIImage(named: iconName) ?? UIImage()
         } else {
-            return UIImage(systemName: iconName) ?? UIImage(systemName: "gear")!
+            return UIImage(systemName: iconName) ?? UIImage()
         }
     }
 }
 
 extension SettingsModel {
-    static var settingsModel = [
+    static let settingsModel = [
         
         [SettingsModel(backgroundColor: .systemGray, iconName: "avatar", title: "Dmitry Kondratenko", hasDisclosure: true, hasSwitch: false, firstCell: true, customIcon: true)],
         
